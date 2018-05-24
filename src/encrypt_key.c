@@ -74,6 +74,43 @@ void randomSeed(int length, char * randomData) {
 
 /*
 --------------------------------------------------------------------
+  Sets base as a random value from 2 to n.
+--------------------------------------------------------------------
+*/
+void getRandomBase(mpz_t base, mpz_t n) {
+  int length = PRIME_LENGTH/4 + 3;
+  char seedStr[length];
+  mpz_t seed;
+  mpz_init(seed);
+
+  // Setting the randomizer.
+  gmp_randstate_t randomizer;
+  gmp_randinit_default(randomizer);
+
+  // Obtaining random seed, converting to mpz int and setting it.
+  randomSeed(length, seedStr);
+  mpz_set_str(seed, seedStr, 0);
+  gmp_randseed(randomizer, seed);
+
+  // Random 1024 bit length base.
+  mpz_urandomb(base, randomizer, 1024);
+
+  // To control the range we will reduce in two the modulus n
+  unsigned int two = 2;
+  mpz_sub_ui(n, n, two);
+  // Obtain the modulus
+  mpz_mod(base, base, n);
+  // Return n to its normal value
+  mpz_add_ui(n, n, two);
+  // Add two to base so it would never be 1 or 0.
+  mpz_add_ui(base, base, two);
+
+  // Free memory
+  mpz_clear(seed);
+}
+
+/*
+--------------------------------------------------------------------
   Obtain the modulus n and fi(n) by creating two random primes
   values (p, q) and multiply them.
 
@@ -151,10 +188,11 @@ int main (int argc, char *argv[]) {
   long int secondsEncrypted;
   FILE *fp;
 
-  mpz_t n, fiN, exp, base, powMod, time, key, encryptedKey;
+  mpz_t n, fiN, exp, two, base, powMod, time, key, encryptedKey;
   mpz_init(n);
   mpz_init(fiN);
   mpz_init(exp);
+  mpz_init(two);
   mpz_init(base);
   mpz_init(powMod);
   mpz_init(time);
@@ -181,11 +219,12 @@ int main (int argc, char *argv[]) {
   // Obtain modulus
   getModulus(n, fiN);
 
-  // Set base = 2.
-  mpz_set_ui(base, 2L);
+  // Obtaining random base.
+  getRandomBase(base, n);
 
   // exp = 2 ^ time mod fi(n)
-  mpz_powm(exp, base, time, fiN);
+  mpz_set_ui (two, 2L);
+  mpz_powm(exp, two, time, fiN);
 
   // powMod = 2 ^ exp mod n
   mpz_powm(powMod, base, exp, n);
@@ -199,19 +238,20 @@ int main (int argc, char *argv[]) {
 
   // Store data to next decrypt
   fp = fopen("key_encrypted.txt", "w");
-  mpz_out_str(fp, 10, encryptedKey);
+  mpz_out_str(fp, 16, encryptedKey);
   fputc('\n', fp);
-  mpz_out_str(fp, 10, n);
+  mpz_out_str(fp, 16, n);
   fputc('\n', fp);
-  mpz_out_str(fp, 10, base);
+  mpz_out_str(fp, 16, base);
   fputc('\n', fp);
-  mpz_out_str(fp, 10, time);
+  mpz_out_str(fp, 16, time);
   fclose(fp);
 
   // Free memory
   mpz_clear(n);
   mpz_clear(fiN);
   mpz_clear(exp);
+  mpz_clear(two);
   mpz_clear(base);
   mpz_clear(powMod);
   mpz_clear(time);

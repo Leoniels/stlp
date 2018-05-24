@@ -23,18 +23,18 @@ int main (int argc, char *argv[]) {
 
   // Loading data from file
   fp = fopen("key_encrypted.txt", "r");
-  mpz_inp_str(encryptedKey, fp, 10);
-  mpz_inp_str(n, fp, 10);
-  mpz_inp_str(base, fp, 10);
-  mpz_inp_str(time, fp, 10);
+  mpz_inp_str(encryptedKey, fp, 16);
+  mpz_inp_str(n, fp, 16);
+  mpz_inp_str(base, fp, 16);
+  mpz_inp_str(time, fp, 16);
   fclose(fp);
-  mpz_out_str(NULL, 10, encryptedKey);
+  mpz_out_str(NULL, 16, encryptedKey);
   printf("\n\n");
-  mpz_out_str(NULL, 10, n);
+  mpz_out_str(NULL, 16, n);
   printf("\n\n");
-  mpz_out_str(NULL, 10, base);
+  mpz_out_str(NULL, 16, base);
   printf("\n\n");
-  mpz_out_str(NULL, 10, time);
+  mpz_out_str(NULL, 16, time);
   printf("\n\n");
 
   // We need high priority to get the key as soos as it can.
