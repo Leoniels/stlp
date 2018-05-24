@@ -3,7 +3,7 @@ A time lock puzzle implementation.
 
 This early prototipe is a test of a time lock puzzle based on the paper "Time-lock puzzles and timed-release Crypto" by Ronald R. Rivest, Adi Shamir and David A. Wagner.
 
-To compile the project you must have the GNU MP ver. 6.1.2 library installed and type for every source file:
+To compile the project you must have the GNU MP ver. 6.1.2 library and libbsd-dev installed and type for every source file:
 
   gcc source.c -lgmp -lbsd
 
