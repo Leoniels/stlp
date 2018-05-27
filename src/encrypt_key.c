@@ -1,4 +1,4 @@
-#include <stdio.h>	  // Do I need to tell u why?
+#include <stdio.h>
 #include <bsd/stdlib.h>   // abs(), arc4random().
 #include <gmp.h>	  // mpz stuff...
 #include <sys/resource.h> // setpriority()

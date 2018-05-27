@@ -3,11 +3,9 @@ A time lock puzzle implementation.
 
 This early prototipe is a test of a time lock puzzle based on the paper "Time-lock puzzles and timed-release Crypto" by Ronald R. Rivest, Adi Shamir and David A. Wagner.
 
-To compile the project you must have the GNU MP ver. 6.1.2 library and libbsd-dev installed and type for every source file:
+To compile the project you must have the GNU MP ver. 6.1.2 library and libbsd-dev installed.
 
-  gcc source.c -lgmp -lbsd
-
-Yeah I know, I should write a Makefile to avoid this shit.
+You can compile all the source with make all.
 
 To run this you must launch all the binarys from the same directory so every process can reach the .txt files generated (Ok, ok... this is also a crap). Then do the following steps:
 

@@ -1,4 +1,4 @@
-#include <stdio.h>	  // Do I need to tell u why?
+#include <stdio.h>
 #include <gmp.h>	  // mpz stuff...
 #include <sys/time.h>     // gettimeofday()
 #include <sys/resource.h> // setpriority()

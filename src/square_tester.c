@@ -1,4 +1,4 @@
-#include <stdio.h>	  // Do I need to tell u why?
+#include <stdio.h>
 #include <bsd/stdlib.h>   // abs(), arc4random().
 #include <gmp.h>	  // mpz stuff...
 #include <sys/time.h>	  // gettimeofday()
@@ -201,7 +201,7 @@ int main (int argc, char *argv[]) {
   if (argc == 3)
     mpz_set_str(squares, argv[2], 10);
   else
-    mpz_set_str(squares, "100000000", 10);
+    mpz_set_str(squares, "10000000", 10);
 
   // Load the squares it will calculate every cicle from a file.
   // Set base = 2.
