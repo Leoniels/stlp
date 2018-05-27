@@ -1,4 +1,4 @@
-# Programa-de-antivicio
+# PRANVI
 A time lock puzzle implementation. 
 
 This early prototipe is a test of a time lock puzzle based on the paper "Time-lock puzzles and timed-release Crypto" by Ronald R. Rivest, Adi Shamir and David A. Wagner.
