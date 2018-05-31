@@ -93,7 +93,7 @@ void getRandomBase(mpz_t base, mpz_t n) {
   gmp_randseed(randomizer, seed);
 
   // Random 1024 bit length base.
-  mpz_urandomb(base, randomizer, 1024);
+  mpz_urandomb(base, randomizer, PRIME_LENGTH*2);
 
   // To control the range we will reduce in two the modulus n
   unsigned int two = 2;
@@ -149,10 +149,10 @@ void getModulus(mpz_t n, mpz_t fiN) {
   gmp_randseed(randomizer, seed);
 
   // Obtaining random value and adding it to p.
-  mpz_urandomb(rand, randomizer, 511);
+  mpz_urandomb(rand, randomizer, PRIME_LENGTH-1);
   mpz_add(p, p, rand);
   // Same to q.
-  mpz_urandomb(rand, randomizer, 511);
+  mpz_urandomb(rand, randomizer, PRIME_LENGTH-1);
   mpz_add(q, q, rand);
 
   // Obtaining next primes of p and q
