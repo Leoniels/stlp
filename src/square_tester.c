@@ -1,147 +1,8 @@
 #include <stdio.h>
-#include <bsd/stdlib.h>   // abs(), arc4random().
-#include <gmp.h>	  // mpz stuff...
 #include <sys/time.h>	  // gettimeofday()
 #include <sys/resource.h> // setpriority()
 
-#define PRIME_LENGTH 512   // Bits. Must be multiple of 4.
-
-/*
---------------------------------------------------------------------
-  Obtain a hexadecimal value where the first bit in 1 and the rest
-  in 0 on a string with prefix '0X' for GMP convenience.
-
-  The word's value will be 2 ^ (length-1).
-
-  Still waiting to find a better definition instead this shit.
---------------------------------------------------------------------
-*/
-void initialValue (int length, char * hexword) {
-  int i;
-
-  hexword[length - 1] = '\0';
-  hexword[0] = '0';
-  hexword[1] = 'X';
-  hexword[2] = '8';
-
-  for(i = 3; i < length - 1; i++)
-    hexword[i] = '0';
-}
-
-
-/*
---------------------------------------------------------------------
-  Return the number converted to a hexadecimal value on a char.
---------------------------------------------------------------------
-*/
-char getHex(int num) {
-  num = abs(num % 16);
-
-  switch(num)
-  {
-    case 10 :
-    	return 'A';
-    case 11 :
-    	return 'B';
-    case 12 :
-    	return 'C';
-    case 13 :
-    	return 'D';
-    case 14 :
-    	return 'E';
-    case 15 :
-    	return 'F';
-    default :
-    	return (char) num + 48;   // ASCI numbers begin at index 48
-  }
-}
-
-/*
---------------------------------------------------------------------
-  Calls arc4random to get random hexadecimal numbers and fill the
-  array with a random hexadecimal word on a string type.
---------------------------------------------------------------------
-*/
-void randomSeed(int length, char * randomData) {
-  int i;
-
-  for(i = 2; i < length - 1; i++)
-    randomData[i] = getHex(arc4random());
-
-  randomData[0] = '0';
-  randomData[1] = 'X';
-  randomData[length - 1] = '\0';
-}
-
-/*
---------------------------------------------------------------------
-  Obtain the modulus n and fi(n) by creating two random primes
-  values (p, q) and multiply them.
-
-  n = p * q
-  fi(n) = (p - 1) * (q - 1)
---------------------------------------------------------------------
-*/
-void getModulus(mpz_t n, mpz_t fiN) {
-  mpz_t p, q, rand, seed;
-  mpz_init(p);
-  mpz_init(q);
-  mpz_init(rand);
-  mpz_init(seed);
-
-  // Length of string which will represent a word of PRIME_LENGTH
-  // bits in hexadecimal base.
-  // (PRIME_LENGTH bits) / (4 bits every hex value)
-  // plus 3 characters denoting the '0X' prefix and '\0' sufix.
-  int length = PRIME_LENGTH/4 + 3;
-  // Hex words strings
-  char defaultWord[length];  // 2 ^ PRIME_LENGTH
-  char seedStr[length];
-
-  // Obtaining initial default value and setting it.
-  initialValue(length, defaultWord);
-  mpz_set_str(p, defaultWord, 0);
-  mpz_set_str(q, defaultWord, 0);
-
-  // Setting the randomizer.
-  gmp_randstate_t randomizer;
-  gmp_randinit_default(randomizer);
-
-  // Obtaining random seed, converting to mpz int and setting it.
-  randomSeed(length, seedStr);
-  mpz_set_str(seed, seedStr, 0);
-  gmp_randseed(randomizer, seed);
-
-  // Obtaining random value and adding it to p.
-  mpz_urandomb(rand, randomizer, 511);
-  mpz_add(p, p, rand);
-  // Same to q.
-  mpz_urandomb(rand, randomizer, 511);
-  mpz_add(q, q, rand);
-
-  // Obtaining next primes of p and q
-  mpz_nextprime(p, p);
-  mpz_nextprime(q, q);
-
-  // Obtaining n: n = p * q
-  mpz_mul(n, p, q);
-
-  // Obtaining p-1 and q-1
-  unsigned int one = 1;
-  mpz_sub_ui(p, p, one);
-  mpz_sub_ui(q, q, one);
-
-  // Obtaining fiN: fiN = (p -1) * (q - 1)
-  mpz_mul(fiN, p, q);
-
-  // Free memory
-  mpz_clear(p);
-  mpz_clear(q);
-  mpz_clear(rand);
-  mpz_clear(seed);
-  gmp_randclear(randomizer);
-}
-
+#include "math.h"
 
 /*
 --------------------------------------------------------------------
@@ -194,14 +55,11 @@ int main (int argc, char *argv[]) {
 
 
   // In case user wants to extend the test.
-  if (argc >= 2)
-    testCicles = atoi(argv[1]);
+  if (argc >= 2) testCicles = atoi(argv[1]);
   // Or set the numbers of squares to calculate every test.
   // In other case default value will be 100 million.
-  if (argc == 3)
-    mpz_set_str(squares, argv[2], 10);
-  else
-    mpz_set_str(squares, "10000000", 10);
+  else if (argc == 3) mpz_set_str(squares, argv[2], 10);
+  else mpz_set_str(squares, "10000000", 10);
 
   // Load the squares it will calculate every cicle from a file.
   // Set base = 2.
@@ -250,6 +108,10 @@ int main (int argc, char *argv[]) {
 
   // Store the results in a file.
   fp = fopen("average_square_per_seconds.txt", "w");
+  if (!fp) {
+    printf("average_square_per_seconds.txt not found");
+    return 1;
+  } 
   mpz_out_str(fp, 10, averRatio);
   fclose(fp);
 
@@ -262,4 +124,5 @@ int main (int argc, char *argv[]) {
   mpz_clear(resul);
   mpz_clear(actualRatio);
   mpz_clear(averRatio);
+  return 0;
 }

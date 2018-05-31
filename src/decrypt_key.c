@@ -23,6 +23,10 @@ int main (int argc, char *argv[]) {
 
   // Loading data from file
   fp = fopen("key_encrypted.txt", "r");
+  if (!fp) {
+    printf("key_encrypted.txt not found");
+    return 1;
+  }
   mpz_inp_str(encryptedKey, fp, 16);
   mpz_inp_str(n, fp, 16);
   mpz_inp_str(base, fp, 16);
@@ -71,4 +75,5 @@ int main (int argc, char *argv[]) {
   mpz_clear(time);
   mpz_clear(key);
   mpz_clear(encryptedKey);
+  return 0;
 }
