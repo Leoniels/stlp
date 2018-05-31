@@ -1,51 +1,6 @@
 #include <stdio.h>
-#include <bsd/stdlib.h>   // abs(), arc4random().
-#include <gmp.h>	  // mpz stuff...
-#include <sys/resource.h> // setpriority()
 
-/*
---------------------------------------------------------------------
-  Return the number converted to a hexadecimal value on a char.
---------------------------------------------------------------------
-*/
-char getHex(int num) {
-  num = abs(num % 16);
-
-  switch(num)
-  {
-    case 10 :
-    	return 'A';
-    case 11 :
-    	return 'B';
-    case 12 :
-    	return 'C';
-    case 13 :
-    	return 'D';
-    case 14 :
-    	return 'E';
-    case 15 :
-    	return 'F';
-    default :
-    	return (char) num + 48;   // ASCI numbers begin at index 48
-  }
-}
-
-/*
---------------------------------------------------------------------
-  Calls arc4random to get random hexadecimal numbers and fill the
-  array with a random hexadecimal word on a string type.
---------------------------------------------------------------------
-*/
-void randomSeed(int length, char * randomData) {
-  int i;
-
-  for(i = 2; i < length - 1; i++)
-    randomData[i] = getHex(arc4random());
-
-  randomData[0] = '0';
-  randomData[1] = 'X';
-  randomData[length - 1] = '\0';
-}
+#include "math.h"
 
 /*
 --------------------------------------------------------------------
