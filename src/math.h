@@ -4,7 +4,7 @@
 #include <bsd/stdlib.h>
 #include <gmp.h>
 
-#define PRIME_LENGTH 512   // Bits. Must be multiple of 4.
+#define PRIME_LENGTH 256   // Bits. Must be multiple of 4.
 
 void initialValue (int length, char * hexword);
 char getHex(int num);

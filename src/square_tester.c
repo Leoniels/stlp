@@ -34,40 +34,47 @@ void getRatioSquare (double sec, double usec, mpz_t squares,
 
 /*
 --------------------------------------------------------------------
-  Main
+  This program will evaluate the machine performance under a
+  generated modulus body n.
+
+  The evaluation consists in a number of tests (obtained from the
+  first arguments) where every test is a resolution of a pow modulus
+  with a and n randomly generated and t specified (from the second
+  argument).
 --------------------------------------------------------------------
 */
 int main (int argc, char *argv[]) {
   // One cicle in the main loop as default.
   int testCicles = 1;
-  struct timeval t0, tf, t;
+  struct timeval time0, timef, timet;
   FILE *fp;
 
   mpz_t n, fiN, exp, squares, base, resul, actualRatio, averRatio;
+  mpz_init(base);
+  mpz_init(squares);
   mpz_init(n);
   mpz_init(fiN);
-  mpz_init(exp);
-  mpz_init(squares);
-  mpz_init(base);
   mpz_init(resul);
+  mpz_init(exp);
   mpz_init(actualRatio);
   mpz_init(averRatio);
 
-
-  // In case user wants to extend the test.
+  // In case user wants to modify the test.
   switch (argc) {
     case 2 :  testCicles = atoi(argv[1]);
-              mpz_set_str(squares, "10000000", 10);
+              mpz_set_str(squares, "100000", 10);
               break;
     case 3 :  testCicles = atoi(argv[1]);
               mpz_set_str(squares, argv[2], 10);
               break;
-    default: mpz_set_str(squares, "10000000", 10);
+    default: mpz_set_str(squares, "100000", 10);
   }
 
-  // Load the squares it will calculate every cicle from a file.
-  // Set base = 2.
-  mpz_set_ui(base, 2L);
+  // Obtain modulus body
+  getModulus(n, fiN);
+
+  // Obtaining random base.
+  getRandomBase(base, n);
 
   // Process needs the real power of the CPU to get a precise value
   // of performance ratio.
@@ -76,27 +83,25 @@ int main (int argc, char *argv[]) {
   int cicles = 0;
   mpz_set_ui(averRatio, 0L);
 
-  // Main loop. Every cicle sets a new n modulus and resolve the same
+  // Main loop. Every cicle resolve the same
   // squares to catch the time invested in.
   while (cicles < testCicles) {
-    // Obtain a random modulus n of 2*PRIME_LENGTH bits
-    getModulus(n, fiN);
     mpz_set(exp, squares);
     // Resolving a square resul = base ^ (2 ^ exp) mod n.
-    gettimeofday (&t0, NULL);
+    gettimeofday (&time0, NULL);
     mpz_set(resul, base);
     while (mpz_cmp_ui(exp, 0L) > 0) {
       mpz_powm_ui(resul, resul, 2L, n);
       mpz_sub_ui(exp, exp, 1L);
     }
-    gettimeofday (&tf, NULL);
+    gettimeofday (&timef, NULL);
 
-    timersub (&tf, &t0, &t);
-    getRatioSquare(t.tv_sec, t.tv_usec, squares, actualRatio);
+    timersub (&timef, &time0, &timet);
+    getRatioSquare(timet.tv_sec, timet.tv_usec, squares, actualRatio);
     mpz_add(averRatio, averRatio, actualRatio);
     // Traze of last results.
-    printf ("Time = %ld:%ld (seg:mseg) Ratio = ", t.tv_sec,
-    		t.tv_usec/1000);
+    printf ("Time = %ld:%ld (seg:mseg) Ratio = ", timet.tv_sec,
+    		timet.tv_usec/1000);
     mpz_out_str(NULL, 10, actualRatio);
     printf("\n");
     cicles++;
@@ -116,16 +121,20 @@ int main (int argc, char *argv[]) {
     printf("average_square_per_seconds.txt not found");
     return 1;
   } 
+  mpz_out_str(fp, 16, n);
+  fputc('\n', fp);
+  mpz_out_str(fp, 16, fiN);
+  fputc('\n', fp);
   mpz_out_str(fp, 10, averRatio);
   fclose(fp);
 
   // Free memory
+  mpz_clear(base);
+  mpz_clear(squares);
   mpz_clear(n);
   mpz_clear(fiN);
-  mpz_clear(exp);
-  mpz_clear(squares);
-  mpz_clear(base);
   mpz_clear(resul);
+  mpz_clear(exp);
   mpz_clear(actualRatio);
   mpz_clear(averRatio);
   return 0;
