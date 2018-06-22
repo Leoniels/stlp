@@ -55,11 +55,15 @@ int main (int argc, char *argv[]) {
 
 
   // In case user wants to extend the test.
-  if (argc >= 2) testCicles = atoi(argv[1]);
-  // Or set the numbers of squares to calculate every test.
-  // In other case default value will be 100 million.
-  else if (argc == 3) mpz_set_str(squares, argv[2], 10);
-  else mpz_set_str(squares, "10000000", 10);
+  switch (argc) {
+    case 2 :  testCicles = atoi(argv[1]);
+              mpz_set_str(squares, "10000000", 10);
+              break;
+    case 3 :  testCicles = atoi(argv[1]);
+              mpz_set_str(squares, argv[2], 10);
+              break;
+    default: mpz_set_str(squares, "10000000", 10);
+  }
 
   // Load the squares it will calculate every cicle from a file.
   // Set base = 2.
