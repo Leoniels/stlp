@@ -67,6 +67,12 @@ int main (int argc, char *argv[]) {
   timersub (&timef, &time0, &timet);
   printf ("Time = %ld:%ld (seg:mseg).\n", timet.tv_sec, timet.tv_usec/1000);
 
+  fp = fopen("key_decrypted.txt", "w");
+  mpz_out_str(fp, 10, key);
+  fputc('\n', fp);
+  fprintf(fp, "%ld:%ld\n", timet.tv_sec, timet.tv_usec/1000);
+  fclose(fp);
+
   // Free memory
   mpz_clear(key);
   mpz_clear(encryptedKey);
