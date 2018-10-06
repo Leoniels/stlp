@@ -7,7 +7,7 @@ To compile the project you must have the GNU MP ver. 6.1.2 library and libbsd-de
 
 You can compile all the source with make all.
 
-To run this you must launch all the binarys from the same directory so every process can reach the .txt files generated (Ok, ok... this is also a crap). Then do the following steps:
+To run this you must launch all the binaries from the same directory so every process can reach the .txt files generated. Then follow these steps:
 
 1.- First get the performance of your CPU under this task to obtain the average of squares modulus n per seconds.
     Just run square_tester binary. Optionally you can introduce the number of test to take as first argument and the number of squares modulus n to calculate every test as second argument.
