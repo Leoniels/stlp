@@ -1,21 +1,37 @@
-CC = gcc
-CFLAGS = -lgmp -lbsd
+# pranvi - time lock puzzle cryptosystem
+# See COPYING file for copyright and license details.
+#TODO: Manual, distribution, install and uninstall
 
-.PHONY: all
-all: dirs execs
+include config.mk
 
-.PHONY: dirs
-dirs:
-	@mkdir -p bin build
+SRC = stlp.c
+OBJ = $(SRC:.c=o)
 
-execs: bin/decrypt_key bin/encrypt_key bin/square_tester bin/key_gen
+all: options stlp
 
-bin/%: src/%.c build/math.o
-	$(CC) $^ -o $@ $(CFLAGS)
+# Show compile options set
+options:
+	@echo stlp build options:
+	@echo "CFLAGS  = $(CFLAGS)"
+	@echo "LDFLAGS = $(LDFLAGS)"
+	@echo "CC      = $(CC)"
 
-build/math.o: src/math.c src/math.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+# Compilation
+.c.o:
+	$(CC) -c $(CFLAGS) $<
 
-.PHONY: clean
+# Configuration
+#$(SRCD)/config.h:
+#	cp $(SRCD)/config.def.h $@
+
+# Project integrity check
+#$(OBJ): config.h config.mk
+
+# Linkage
+stlp: stlp.o
+	$(CC) -o $@ stlp.o $(LDFLAGS)
+
 clean:
-	rm -rf bin build
+	rm -rf stlp stlp.o
+
+.PHONY: all options clean
