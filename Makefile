@@ -4,7 +4,7 @@
 
 include config.mk
 
-SRC = stlp.c
+SRC = etlp.c dtlp.c
 OBJ = $(SRC:.c=o)
 
 all: options stlp
@@ -28,10 +28,15 @@ options:
 #$(OBJ): config.h config.mk
 
 # Linkage
-stlp: stlp.o
-	$(CC) -o $@ stlp.o $(LDFLAGS)
+etlp: etlp.o
+	$(CC) -o $@ etlp.o $(LDFLAGS)
+
+dtlp: dtlp.o
+	$(CC) -o $@ dtlp.o $(LDFLAGS)
+
+stlp: etlp dtlp
 
 clean:
-	rm -rf stlp stlp.o
+	rm -rf etlp etlp.o dtlp dtlp.o
 
 .PHONY: all options clean

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <limits.h>
 #include <time.h>
+#include <sysexits.h>
 #include <gmp.h>
 
 #define DEF_TESTIME 1 /* second */
@@ -21,8 +22,8 @@ static mpz_t Ck, b, a, e, t;
 static void
 usage(void)
 {
-	fputs("usage: stlp [-h] [-v] [-t testtime] time_encrypted\n", stderr);
-	exit(1);
+	fputs("usage: stlpe [-h] [-v] [-t test_time] time_encrypted\n", stderr);
+	exit(EX_USAGE);
 }
 
 static void
@@ -130,7 +131,7 @@ encrypt(void)
 	/* read key from stdin */
 	if (scanf("%x", &key) == EOF) {
 		fputs("Error reading key from stdin", stderr);
-		exit(1);
+		exit(EX_IOERR);
 	}
 
 	/* encrypt key with b */
@@ -164,8 +165,8 @@ main (int argc, char *argv[])
 		if (!strcmp(argv[i], "-h"))
 			usage();
 		else if (!strcmp(argv[i], "-v")) {
-			puts("pranvi_encrypter-0.2");
-			exit(0);
+			puts("simple time lock puzzle encrypter v0.2");
+			exit(EX_OK);
 		} else if (!strcmp(argv[i], "-t"))
 			test_time = strtoul(argv[++i], NULL, BASE10);
 	time_enc = strtoul(argv[argc-1], NULL, BASE10);
@@ -178,7 +179,7 @@ main (int argc, char *argv[])
 
 	encrypt();
 	
-	/* output Ck, a, t, n to stout */
+	/* output Ck, a, t, n to stdout */
 	mpz_out_str(NULL, BASE16, Ck); putchar('\n');
 	mpz_out_str(NULL, BASE16, a);  putchar('\n');
 	mpz_out_str(NULL, BASE16, t);  putchar('\n');

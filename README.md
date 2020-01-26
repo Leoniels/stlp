@@ -1,12 +1,17 @@
 # PRANVI
-A time lock puzzle implementation. 
+A simple time lock puzzle implementation.
 
-Simple implementation of the cryptosystem: "Time-lock puzzles and timed-release Crypto" by Ronald R. Rivest, Adi Shamir and David A. Wagner.
+Simple UNIX-like/suckless implementation of the cryptosystem defined in: "Time-lock puzzles and timed-release Crypto" by Ronald R. Rivest, Adi Shamir and David A. Wagner.
 
 ## Dependencies
-- GNU MP (libgmp)
-
+· GNU MP (libgmp)
 
 ## Build
-"$ make all" should do it fine in a Linux system at the moment.
+A simple call to make should do it fine in a Linux system at the moment.
+
+## Example usage
+Using stdin to encrypt a hexadecimal key for ten seconds and then decrypt it to stdout.
+```bash
+echo 89ABC | etlp 10 | dtlp
+```
 
