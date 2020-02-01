@@ -96,11 +96,12 @@ static void
 test_perf(void)
 {
 	unsigned long cicles = 0;
-	clock_t t1 = 0;
-	clock_t t0;
+	clock_t t0, ticks, t_test;
 
 	mpz_set(b, a);
+	ticks = CLOCKS_PER_SEC * test_time;
 	t0 = clock();
+	t_test = t0 + ticks;
 	do {
 		mpz_set_ui(t, SQUARES_PER_CICLE);
 		while(mpz_cmp_ui(t, 0) > 0) {
@@ -108,9 +109,8 @@ test_perf(void)
 			mpz_sub_ui(t, t, 1UL);
 		}
 		cicles++;
-		t1 = clock() - t0;
-	} while(t1/CLOCKS_PER_SEC < test_time);
-	S = (unsigned long int)((SQUARES_PER_CICLE*cicles)/test_time);
+	} while(clock() < t_test);
+	S = (unsigned long)((SQUARES_PER_CICLE * cicles)/test_time);
 }
 
 /* Encrypt efficiently by solving: Ck = k + b
