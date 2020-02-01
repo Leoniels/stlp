@@ -1,3 +1,4 @@
+/* See COPYING file for copyright and license details. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +7,8 @@
 #include <sysexits.h>
 #include <gmp.h>
 
-#define DEF_TESTIME 1 /* second */
+#define DEF_TESTIME 1 /* seconds */
+#define SQUARES_PER_CICLE 1000UL /* squares to do each cicle */
 #define PRIME_LEN 512 /* prime bit length */
 #define BASE16 16
 #define BASE10 10
@@ -16,8 +18,6 @@ static unsigned long int S;
 static gmp_randstate_t random_gen;
 static mpz_t n, fi_n;
 static mpz_t Ck, b, a, e, t;
-
-/*#include "config.h"*/
 
 static void
 usage(void)
@@ -95,17 +95,22 @@ gen_base(void)
 static void
 test_perf(void)
 {
-	mpz_set_ui(t, ULONG_MAX);
-	mpz_set(b, a);
-	clock_t t0 = clock();
+	unsigned long cicles = 0;
 	clock_t t1 = 0;
-	while(t1/CLOCKS_PER_SEC < test_time) {
-		mpz_powm_ui(b, b, 2UL, n);
-		mpz_sub_ui(t, t, 1UL);
+	clock_t t0;
+
+	mpz_set(b, a);
+	t0 = clock();
+	do {
+		mpz_set_ui(t, SQUARES_PER_CICLE);
+		while(mpz_cmp_ui(t, 0) > 0) {
+			mpz_powm_ui(b, b, 2UL, n);
+			mpz_sub_ui(t, t, 1UL);
+		}
+		cicles++;
 		t1 = clock() - t0;
-	}
-	unsigned long squares = ULONG_MAX - mpz_get_ui(t);
-	S = (unsigned long int)(squares/test_time);
+	} while(t1/CLOCKS_PER_SEC < test_time);
+	S = (unsigned long int)((SQUARES_PER_CICLE*cicles)/test_time);
 }
 
 /* Encrypt efficiently by solving: Ck = k + b

@@ -1,3 +1,4 @@
+/* See COPYING file for copyright and license details. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,8 +6,6 @@
 #include <gmp.h>
 
 #define BASE16 16
-
-/*#include "config.h"*/
 
 static void
 usage(void)

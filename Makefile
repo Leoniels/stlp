@@ -20,13 +20,6 @@ options:
 .c.o:
 	$(CC) -c $(CFLAGS) $<
 
-# Configuration
-#$(SRCD)/config.h:
-#	cp $(SRCD)/config.def.h $@
-
-# Project integrity check
-#$(OBJ): config.h config.mk
-
 # Linkage
 etlp: etlp.o
 	$(CC) -o $@ etlp.o $(LDFLAGS)

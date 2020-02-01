@@ -2,3 +2,5 @@ doc
 *.o
 stlp
 *.tlp
+etlp
+dtlp

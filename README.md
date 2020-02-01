@@ -14,4 +14,10 @@ Using stdin to encrypt a hexadecimal key for ten seconds and then decrypt it to 
 ```bash
 echo 89ABC | etlp 10 | dtlp
 ```
+## TODO things
+· Keyfile/keyvalue as input argument in etlp.
+· Manual.
+· Install and uninstall make.
+· Store every X time the non-resolved puzzle in a cache file.
+· Make distribution package.
 
