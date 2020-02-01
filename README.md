@@ -12,12 +12,16 @@ A simple call to make should do it fine in a Linux system at the moment.
 ## Example usage
 Using stdin to encrypt a hexadecimal key for ten seconds and then decrypt it to stdout.
 ```bash
-echo 89ABC | etlp 10 | dtlp
+ $ echo 89ABC | etlp 10 | dtlp
 ```
 ## TODO things
-· Keyfile/keyvalue as input argument in etlp.
-· Manual.
-· Install and uninstall make.
-· Store every X time the non-resolved puzzle in a cache file.
-· Make distribution package.
 
+· Keyfile/keyvalue as input argument in etlp.
+
+· Manual.
+
+· Install and uninstall make.
+
+· Store every X time the non-resolved puzzle in a cache file.
+
+· Make distribution package.
