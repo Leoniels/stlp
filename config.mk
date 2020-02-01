@@ -1,4 +1,4 @@
-# pranvi version
+# stlp version
 VERSION = 0.2
 
 # paths

@@ -10,7 +10,7 @@
 static void
 usage(void)
 {
-	fputs("usage: stlpd [-h] [-v] [-f crypted_key_file]\n", stderr);
+	fputs("usage: dtlp [-h] [-v] [-f crypted_key_file]\n", stderr);
 	exit(EX_USAGE);
 }
 

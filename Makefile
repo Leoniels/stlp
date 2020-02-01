@@ -1,4 +1,4 @@
-# pranvi - time lock puzzle cryptosystem
+# stlp - time lock puzzle cryptosystem
 # See COPYING file for copyright and license details.
 #TODO: Manual, distribution, install and uninstall
 

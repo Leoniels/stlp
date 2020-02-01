@@ -21,7 +21,7 @@ static mpz_t Ck, b, a, e, t;
 static void
 usage(void)
 {
-	fputs("usage: stlpe [-h] [-v] [-t test_time] time_encrypted\n", stderr);
+	fputs("usage: etlp [-h] [-v] [-t test_time] time_encrypted\n", stderr);
 	exit(EX_USAGE);
 }
 
