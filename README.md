@@ -1,4 +1,4 @@
-# PRANVI
+# STLP
 A simple time lock puzzle implementation.
 
 Simple UNIX-like/suckless implementation of the cryptosystem defined in: "Time-lock puzzles and timed-release Crypto" by Ronald R. Rivest, Adi Shamir and David A. Wagner.
