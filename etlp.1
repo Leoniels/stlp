@@ -1,0 +1,72 @@
+.TH	ETLP 1
+.SH NAME
+etlp \- encrypt time lock puzzle
+.SH SYNOPSIS
+.B etlp
+.RB [ \-hv ]
+.RB [ \-t
+.IR test_time ]
+.RB [ \-f
+.IR key_file ]
+.IR time_encrypted
+.SH DESCRIPTION
+.B etlp
+is a tool from the time lock puzzle cryptosystem suite
+.B stlp
+(simple time lock puzzle) that encrypts a hexadecimal key (read from stdin by default) and prints the time lock puzzle to stdout so, when decrypted with
+.IR dtlp(1)
+it will take
+.IR time_encrypted
+seconds in host machine.
+.SH OPTIONS
+.TP
+.B \-h
+prints usage format to stdout as help.
+.TP
+.B \-v
+prints version information to stdout, then exits.
+.TP
+.B \-t " test_time"
+time in seconds to invest in performance test.
+.IP
+This encryption requires to do a performance test on the machine with the random values generated. By default the test time will be 1 second. But this can be increased with an arbitrary
+.IR test_time
+seconds. It is recommended to increase the
+.IR test_time
+value for enough time to include the average workload in the performance test so the decryption time will be more close to the desired
+.IR time_encrypted
+.
+.TP
+.B \-f " key_file"
+reads the key to encrypt from a file instead of stdin.
+.TP
+.B "time_encrypted"
+sets the time lock puzzle challenge so when decrypted it will require those seconds to obtain the key back.
+.SH EXAMPLES
+To encrypt a key from stdin for 5 seconds and obtain the time lock puzzle from stdout
+.PP
+.nf
+.RS
+echo "89AB" | etlp 5
+.RE
+.fi
+.PP
+To encrypt a key from a file for a minute and write the time lock puzzle to another file
+.PP
+.nf
+.RS
+etlp -f keyfile.hex 60 > crypted_key.tlp
+.RE
+.fi
+.PP
+To test the performance for a hour and encrypt the key for a day
+.PP
+.nf
+.RS
+echo "cdf01" | etlp -t 3600 86400
+.RE
+.fi
+.PP
+.SH SEE ALSO
+.IR dtlp (1)
+

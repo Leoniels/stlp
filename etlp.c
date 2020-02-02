@@ -12,6 +12,7 @@
 #define BASE16 16
 #define BASE10 10
 
+static FILE *key_file;
 static unsigned long int time_enc, test_time = DEF_TESTIME;
 static unsigned long int S;
 static gmp_randstate_t random_gen;
@@ -21,7 +22,7 @@ static mpz_t Ck, b, a, e, t;
 static void
 usage(void)
 {
-	fputs("usage: etlp [-h] [-v] [-t test_time] time_encrypted\n", stderr);
+	fputs("usage: etlp [-h] [-v] [-t test_time] [-f key_file] time_encrypted\n", stderr);
 	exit(EX_USAGE);
 }
 
@@ -133,7 +134,7 @@ encrypt(void)
 	mpz_powm(b, a, e, n);
 
 	/* read key from stdin */
-	if (scanf("%x", &key) == EOF) {
+	if (fscanf(key_file, "%x", &key) == EOF) {
 		fputs("Error reading key from stdin", stderr);
 		exit(EX_IOERR);
 	}
@@ -148,6 +149,8 @@ encrypt(void)
 static void
 unsetup(void)
 {
+	if(key_file != stdin)
+		fclose(key_file);
 	mpz_clear(n);
 	mpz_clear(fi_n);
 	mpz_clear(Ck);
@@ -163,6 +166,7 @@ int
 main (int argc, char *argv[])
 {
 	int i;
+	key_file = stdin;
 
 	/* process input */
 	for (i = 1; i < argc; i++)
@@ -173,6 +177,13 @@ main (int argc, char *argv[])
 			exit(EX_OK);
 		} else if (!strcmp(argv[i], "-t"))
 			test_time = strtoul(argv[++i], NULL, BASE10);
+		else if (!strcmp(argv[i], "-f")) {
+			key_file = fopen(argv[++i], "r");
+			if (!key_file) {
+				fprintf(stderr, "Error opening %s\n", argv[i]);
+				exit(EX_NOINPUT);
+			}
+		}
 	time_enc = strtoul(argv[argc-1], NULL, BASE10);
 
 	setup();

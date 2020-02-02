@@ -16,9 +16,7 @@ Using stdin to encrypt a hexadecimal key for ten seconds and then decrypt it to 
 ```
 ## TODO things
 
-· Keyfile/keyvalue as input argument in etlp.
-
-· Manual.
+· dtlp manual.
 
 · Install and uninstall make.
 
