@@ -18,8 +18,6 @@ Using stdin to encrypt a hexadecimal key for ten seconds and then decrypt it to 
 
 · dtlp manual.
 
-· Install and uninstall make.
-
 · Store every X time the non-resolved puzzle in a cache file.
 
 · Make distribution package.
