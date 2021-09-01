@@ -119,10 +119,10 @@ test_perf(void)
 static void
 encrypt(void)
 {
-	unsigned int key;
-	mpz_t T, two;
+	mpz_t T, two, key;
 	mpz_init(T);
 	mpz_init(two);
+	mpz_init(key);
 
 	/* calculate challenge to reach desired time */
 	mpz_set_ui(T, time_enc);
@@ -134,13 +134,18 @@ encrypt(void)
 	mpz_powm(b, a, e, n);
 
 	/* read key from stdin */
-	if (fscanf(key_file, "%x", &key) == EOF) {
+	if (mpz_inp_str(key, key_file, BASE16) == 0) {
 		fputs("Error reading key from stdin", stderr);
 		exit(EX_IOERR);
 	}
 
+	if (mpz_cmp(key, n) >= 0) {
+		fputs("Key is too large for modulus length", stderr);
+		exit(EX_USAGE);
+	}
+
 	/* encrypt key with b */
-	mpz_add_ui(Ck, b, key);
+	mpz_add(Ck, b, key);
 	
 	mpz_clear(T);
 	mpz_clear(two);
