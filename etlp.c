@@ -7,8 +7,8 @@
 #include <gmp.h>
 
 #define DEF_TESTIME 1 /* seconds */
-#define SQUARES_PER_CICLE 1000UL /* squares to do each cicle */
-#define PRIME_LEN 512 /* prime bit length */
+#define SQUARES_PER_CYCLE 1000UL /* squares to do each cycle */
+#define PRIME_LEN 512 /* prime bit length; the modulus length will be twice this */
 #define BASE16 16
 #define BASE10 10
 
@@ -16,7 +16,7 @@ static FILE *key_file;
 static unsigned long int time_enc, test_time = DEF_TESTIME;
 static unsigned long int S;
 static gmp_randstate_t random_gen;
-static mpz_t n, fi_n;
+static mpz_t n, phi_n;
 static mpz_t Ck, b, a, e, t;
 
 static void
@@ -31,7 +31,7 @@ setup(void)
 {
 	/* Initialize mpz_t global variables */
 	mpz_init(n);
-	mpz_init(fi_n);
+	mpz_init(phi_n);
 	mpz_init(Ck);
 	mpz_init(a);
 	mpz_init(b);
@@ -50,13 +50,13 @@ setup(void)
 	gmp_randseed_ui(random_gen, random_seed);
 }
 
-/* Obtain the modulus n and fi(n) by creating two big random primes values
- * (p, q) and multiply them.
+/* Obtain the modulus n and phi(n) by creating two large random primes
+ * (p, q) and multiplying them.
  *
  * n = p * q
- * fi(n) = (p - 1) * (q - 1) */
+ * phi(n) = (p - 1) * (q - 1) */
 static void
-gen_modulos(void)
+gen_modulus(void)
 {
 	mpz_t p, q;
 	mpz_init(p);
@@ -73,7 +73,7 @@ gen_modulos(void)
 	mpz_sub_ui(p, p, 1UL);
 	mpz_sub_ui(q, q, 1UL);
 
-	mpz_mul(fi_n, p, q);
+	mpz_mul(phi_n, p, q);
 
 	mpz_clear(p);
 	mpz_clear(q);
@@ -95,7 +95,7 @@ gen_base(void)
 static void
 test_perf(void)
 {
-	unsigned long cicles = 0;
+	unsigned long cycles = 0;
 	clock_t t0, ticks, t_test;
 
 	mpz_set(b, a);
@@ -103,19 +103,19 @@ test_perf(void)
 	t0 = clock();
 	t_test = t0 + ticks;
 	do {
-		mpz_set_ui(t, SQUARES_PER_CICLE);
+		mpz_set_ui(t, SQUARES_PER_CYCLE);
 		while(mpz_cmp_ui(t, 0) > 0) {
 			mpz_powm_ui(b, b, 2UL, n);
 			mpz_sub_ui(t, t, 1UL);
 		}
-		cicles++;
+		cycles++;
 	} while(clock() < t_test);
-	S = (unsigned long)((SQUARES_PER_CICLE * cicles)/test_time);
+	S = (unsigned long)((SQUARES_PER_CYCLE * cycles)/test_time);
 }
 
 /* Encrypt efficiently by solving: Ck = k + b
  * b = a ^ e mod n
- * e = 2 ^ t mod fi_n */
+ * e = 2 ^ t mod phi_n */
 static void
 encrypt(void)
 {
@@ -130,7 +130,7 @@ encrypt(void)
 
 	/* calculate b */
 	mpz_set_ui(two, 2UL);
-	mpz_powm(e, two, t, fi_n);
+	mpz_powm(e, two, t, phi_n);
 	mpz_powm(b, a, e, n);
 
 	/* read key from stdin */
@@ -152,7 +152,7 @@ unsetup(void)
 	if(key_file != stdin)
 		fclose(key_file);
 	mpz_clear(n);
-	mpz_clear(fi_n);
+	mpz_clear(phi_n);
 	mpz_clear(Ck);
 	mpz_clear(t);
 	mpz_clear(a);
@@ -188,7 +188,7 @@ main (int argc, char *argv[])
 
 	setup();
 
-	gen_modulos();
+	gen_modulus();
 	gen_base();
 	test_perf();
 

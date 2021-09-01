@@ -44,15 +44,15 @@ main (int argc, char *argv[])
 	mpz_init(n);
 	mpz_init(key);
 
-	/* read crypted key from stdin or file */
-	mpz_inp_str(Ck, fp, 16);
-	mpz_inp_str(a, fp, 16);
-	mpz_inp_str(t, fp, 16);
-	mpz_inp_str(n, fp, 16);
+	/* read encrypted key from stdin or file */
+	mpz_inp_str(Ck, fp, BASE16);
+	mpz_inp_str(a, fp, BASE16);
+	mpz_inp_str(t, fp, BASE16);
+	mpz_inp_str(n, fp, BASE16);
 	if (fp)
 		fclose(fp);
 
-	/* resolv time lock puzzle */
+	/* resolve time lock puzzle */
 	while (mpz_cmp_ui(t, 0UL)) {
 		mpz_powm_ui(a, a, 2UL, n);
 		mpz_sub_ui(t, t, 1UL);
