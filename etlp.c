@@ -168,6 +168,7 @@ main (int argc, char *argv[])
 	int i;
 	key_file = stdin;
 
+	time_enc = 0;
 	/* process input */
 	for (i = 1; i < argc; i++)
 		if (!strcmp(argv[i], "-h"))
@@ -183,8 +184,12 @@ main (int argc, char *argv[])
 				fprintf(stderr, "Error opening %s\n", argv[i]);
 				exit(EX_NOINPUT);
 			}
-		}
-	time_enc = strtoul(argv[argc-1], NULL, BASE10);
+		} else if (time_enc == 0)
+			time_enc = strtoul(argv[i], NULL, BASE10);
+		else
+			usage();
+	
+	if (time_enc == 0) usage();
 
 	setup();
 
