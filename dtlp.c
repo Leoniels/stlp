@@ -27,7 +27,7 @@ main (int argc, char *argv[])
 		if (!strcmp(argv[i], "-h"))
 			usage();
 		else if (!strcmp(argv[i], "-v")) {
-			puts("simple time lock puzzle decrypter v0.2");
+			puts("simple time lock puzzle decrypter v0.3");
 			exit(EX_OK);
 		} else if (!strcmp(argv[i], "-f")) {
 			fp = fopen(argv[++i], "r");

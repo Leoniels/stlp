@@ -8,12 +8,12 @@
 
 #define DEF_TESTIME 1 /* seconds */
 #define SQUARES_PER_CYCLE 1000UL /* squares to do each cycle */
-#define PRIME_LEN 512 /* prime bit length; the modulus length will be twice this */
 #define BASE16 16
 #define BASE10 10
 
 static FILE *key_file;
 static unsigned long int time_enc, test_time = DEF_TESTIME;
+static unsigned long int bit_length = 1024; /* modulus length */
 static unsigned long int S;
 static gmp_randstate_t random_gen;
 static mpz_t n, phi_n;
@@ -22,7 +22,7 @@ static mpz_t Ck, b, a, e, t;
 static void
 usage(void)
 {
-	fputs("usage: etlp [-h] [-v] [-t test_time] [-f key_file] time_encrypted\n", stderr);
+	fputs("usage: etlp [-h] [-v] [-t test_time] [-f key_file] [-b bits] time_encrypted\n", stderr);
 	exit(EX_USAGE);
 }
 
@@ -62,8 +62,8 @@ gen_modulus(void)
 	mpz_init(p);
 	mpz_init(q);
 
-	mpz_urandomb(p, random_gen, PRIME_LEN);
-	mpz_urandomb(q, random_gen, PRIME_LEN);
+	mpz_urandomb(p, random_gen, bit_length/2);
+	mpz_urandomb(q, random_gen, bit_length/2);
 
 	mpz_nextprime(p, p);
 	mpz_nextprime(q, q);
@@ -83,7 +83,7 @@ gen_modulus(void)
 static void
 gen_base(void)
 {
-	mpz_urandomb(a, random_gen, PRIME_LEN*2);
+	mpz_urandomb(a, random_gen, bit_length);
 
 	mpz_sub_ui(n, n, 2UL);
 	mpz_mod(a, a, n);
@@ -179,11 +179,17 @@ main (int argc, char *argv[])
 		if (!strcmp(argv[i], "-h"))
 			usage();
 		else if (!strcmp(argv[i], "-v")) {
-			puts("simple time lock puzzle encrypter v0.2");
+			puts("simple time lock puzzle encrypter v0.3");
 			exit(EX_OK);
 		} else if (!strcmp(argv[i], "-t"))
 			test_time = strtoul(argv[++i], NULL, BASE10);
-		else if (!strcmp(argv[i], "-f")) {
+		else if (!strcmp(argv[i], "-b")) {
+			bit_length = strtoul(argv[++i], NULL, BASE10);
+			if (bit_length % 2) {
+				fputs("Bit length should be a multiple of 2", stderr);
+				exit(EX_USAGE);
+			}
+		} else if (!strcmp(argv[i], "-f")) {
 			key_file = fopen(argv[++i], "r");
 			if (!key_file) {
 				fprintf(stderr, "Error opening %s\n", argv[i]);
