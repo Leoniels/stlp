@@ -135,7 +135,7 @@ encrypt(void)
 
 	/* read key from stdin */
 	if (fscanf(key_file, "%x", &key) == EOF) {
-		fputs("Error reading key from stdin", stderr);
+		fputs("Error reading key from stdin\n", stderr);
 		exit(EX_IOERR);
 	}
 
