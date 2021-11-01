@@ -1,0 +1,22 @@
+#!/bin/sh
+# Encrypt a key with a time lock puzzle challenge and resolve it.
+usage="usage: $0 key_file time"
+
+set -e
+
+KEYFILE=$1
+TIME=$2
+
+# Check input.
+[ $# -ne 2 ] && echo $usage >&2 && exit 2
+BADCHARS=$(echo $TIME | sed 's/[0-9]//g')
+[ $BADCHARS ] && echo time must be integer seconds >&2 && exit 3
+BADCHARS=$(sed 's/[0-9a-fA-F]//g' $KEYFILE)
+[ $BADCHARS ] && echo key must be a hexadecimal string >&2 && exit 4
+
+# Encrypt and solve.
+[ -f challenge.tlp ] && echo a challenge remains to be solved >&2 && exit 5
+etlp -t ${TESTIME:-10} -f $KEYFILE $TIME > challenge.tlp
+rm $KEYFILE
+dtlp -f challenge.tlp > key.hex
+rm challenge.tlp

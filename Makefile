@@ -34,9 +34,10 @@ clean:
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp -f etlp dtlp $(DESTDIR)$(PREFIX)/bin
+	cp -f etlp dtlp lit $(DESTDIR)$(PREFIX)/bin
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/etlp
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dtlp
+	chmod 755 $(DESTDIR)$(PREFIX)/bin/lit
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	sed "s/VERSION/$(VERSION)/g" < etlp.1 > $(DESTDIR)$(MANPREFIX)/man1/etlp.1
 	sed "s/VERSION/$(VERSION)/g" < dtlp.1 > $(DESTDIR)$(MANPREFIX)/man1/dtlp.1
@@ -46,6 +47,7 @@ install: all
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/etlp\
 			$(DESTDIR)$(PREFIX)/bin/dtlp\
+			$(DESTDIR)$(PREFIX)/bin/lit\
 			$(DESTDIR)$(MANPREFIX)/man1/etlp.1
 			$(DESTDIR)$(MANPREFIX)/man1/dtlp.1
 
