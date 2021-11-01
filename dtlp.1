@@ -1,0 +1,49 @@
+.TH	DTLP 1 dtlp\-VERSION
+
+.SH NAME
+dtlp \- decrypt time lock puzzle
+
+.SH SYNOPSIS
+.B dtlp
+.RB [ \-hv ]
+.RB [ \-f
+.IR puzzle ]
+
+.SH DESCRIPTION
+.B dtlp
+is a tool from the time lock puzzle cryptosystem suite
+.B stlp
+(simple time lock puzzle) that decrypts a time lock puzzle challenge (read from stdin by default) and prints the decrypted key to stdout.
+
+.SH OPTIONS
+.TP
+.B \-h
+prints usage format to stdout as help.
+.TP
+.B \-v
+prints version information to stdout, then exits.
+.TP
+.B \-f " key_file"
+reads the challenge to decrypt from file instead of stdin.
+
+.SH EXAMPLES
+Decrypt the key "89ab" whose challenge was set to last 5 seconds and print the result to stdout.
+.PP
+.nf
+.RS
+echo 89ab | etlp 5 | dtlp
+.RE
+.fi
+.PP
+
+Resolve the puzzle written in challenge.tlp and write the decrypted key to key.hex.
+.PP
+.nf
+.RS
+dtlp -f challenge.tlp > key.hex
+.RE
+.fi
+.PP
+
+.SH SEE ALSO
+.IR etlp (1)

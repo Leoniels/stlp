@@ -39,11 +39,14 @@ install: all
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dtlp
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	sed "s/VERSION/$(VERSION)/g" < etlp.1 > $(DESTDIR)$(MANPREFIX)/man1/etlp.1
+	sed "s/VERSION/$(VERSION)/g" < dtlp.1 > $(DESTDIR)$(MANPREFIX)/man1/dtlp.1
 	chmod 644 $(DESTDIR)$(MANPREFIX)/man1/etlp.1
+	chmod 644 $(DESTDIR)$(MANPREFIX)/man1/dtlp.1
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/etlp\
 			$(DESTDIR)$(PREFIX)/bin/dtlp\
 			$(DESTDIR)$(MANPREFIX)/man1/etlp.1
+			$(DESTDIR)$(MANPREFIX)/man1/dtlp.1
 
 .PHONY: all options clean install uninstall
