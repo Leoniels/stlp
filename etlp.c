@@ -9,6 +9,7 @@
 #define DEF_TESTIME 1 /* seconds */
 #define SQUARES_PER_CICLE 1000UL /* squares to do each cicle */
 #define PRIME_LEN 512 /* prime bit length */
+#define ENTROPY_BYTES (PRIME_LEN/2) /* amount of bytes to read from /dev/urandom */
 #define BASE16 16
 #define BASE10 10
 
@@ -40,14 +41,18 @@ setup(void)
 
 	/* Setup gmp random generator */
 	FILE *fp;
-	unsigned long int random_seed;
+	unsigned char random_bytes[ENTROPY_BYTES];
 
 	fp = fopen("/dev/urandom", "r");
-	fscanf(fp, "%lu", &random_seed);
+	fread(random_bytes, sizeof(unsigned char), ENTROPY_BYTES, fp);
 	fclose(fp);
 
+	mpz_t random_seed;
+	mpz_init(random_seed);
+	mpz_import(random_seed, ENTROPY_BYTES, 1, sizeof(unsigned char), 0, 0, random_bytes);
+
 	gmp_randinit_default(random_gen);
-	gmp_randseed_ui(random_gen, random_seed);
+	gmp_randseed(random_gen, random_seed);
 }
 
 /* Obtain the modulus n and fi(n) by creating two big random primes values
